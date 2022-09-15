@@ -1,10 +1,4 @@
-import express, {
-  Request,
-  Response,
-  NextFunction,
-  Application,
-  ErrorRequestHandler,
-} from "express";
+import express, { Application, ErrorRequestHandler } from "express";
 import { Server } from "http";
 // import createHttpError from "http-errors";
 import cors from "cors";
@@ -16,15 +10,19 @@ import morgan from "morgan";
 import { connect, mongoose } from "./connection/mongoConnect";
 import { connectTestDB } from "./connection/mongoMemoryServer";
 const MongoStore = require("connect-mongodb-session")(session);
-import { Product } from "./models/productModel";
 
-import productsRoute from "./routes/productsRoute";
+//Routers
+import productsRoutes from "./routes/productsRoute";
+import categoriesRoutes from "./routes/categoriesRoute";
+import ordersRoutes from "./routes/ordersRoute";
+import usersRoutes from "./routes/usersRoute";
 
+//App variables
 const app: Application = express();
 const api = process.env.API_URL;
 
 //Middlewares
-app.use(cors());
+app.use('*', cors());
 app.use(morgan("dev"));
 app.use(cookieParser());
 app.use(express.json());
@@ -38,10 +36,13 @@ app.use(
   })
 );
 
-//Routers
-app.use(`${api}/products`, productsRoute);
+//Routes
+app.use(`${api}/products`, productsRoutes);
+app.use(`${api}/categories`, categoriesRoutes);
+app.use(`${api}/orders`, ordersRoutes);
+app.use(`${api}/users`, usersRoutes);
 
-
+//MongoDB Connection
 if (process.env.NODE_ENV === "test") {
   connectTestDB();
   console.log(process.env.NODE_ENV);
@@ -50,37 +51,10 @@ if (process.env.NODE_ENV === "test") {
   console.log(process.env.NODE_ENV);
 }
 
-// app.get(`${api}/products`, async (req: Request, res: Response) => {
-//   const productLists = await Product.find();
-
-//   if (!productLists) {
-//     res.status(500).json({ success: false });
-//   }
-//   res.send(productLists);
-// });
-
-// app.post(`${api}/products`, (req: Request, res: Response) => {
-//   const { name, image, countInStock } = req.body;
-//   const product = new Product({
-//     name,
-//     image,
-//     countInStock,
-//   });
-//   product
-//     .save()
-//     .then((createdProduct) => {
-//       res.status(201).json(createdProduct);
-//     })
-//     .catch((error) => {
-//       res.status(500).json({
-//         error,
-//         success: false,
-//       });
-//     });
-// });
-
+//App Port
 const PORT: number = Number(process.env.PORT) || 3000;
 
+//App Server
 const server: Server = app.listen(PORT, () => {
   console.log(api);
   console.log(`App listning on port ${PORT}`);

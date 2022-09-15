@@ -1,6 +1,6 @@
 import mongoose, { Schema, model, Document, Types } from "mongoose";
 
-const productSchema = new mongoose.Schema({
+const productsSchema = new mongoose.Schema({
     name: String,
     image: String,
     countInStock: {
@@ -9,4 +9,4 @@ const productSchema = new mongoose.Schema({
     }
 })
 
-export const Product = model("Product", productSchema);
+export const Products = model("Products", productsSchema);

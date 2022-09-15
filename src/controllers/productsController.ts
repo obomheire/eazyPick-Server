@@ -4,10 +4,10 @@ import express, {
   NextFunction,
   ErrorRequestHandler,
 } from "express";
-import { Product } from "../models/productModel";
+import { Products } from "../models/productsModel";
 
 export const getProducts = async (req: Request, res: Response) => { 
-    const productLists = await Product.find();
+    const productLists = await Products.find();
     
     if (!productLists) {
         res.status(500).json({ success: false });
@@ -17,12 +17,12 @@ export const getProducts = async (req: Request, res: Response) => {
 
 
 
-export const postProducts = async (req: Request, res: Response) => {
+export const createProduct = async (req: Request, res: Response) => {
     const { name, image, countInStock } = req.body;
-    const product = new Product({
-        name,
-        image,
-        countInStock,
+    const product = new Products({
+      name,
+      image,
+      countInStock,
     });
     product
         .save()
