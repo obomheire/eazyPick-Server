@@ -22,7 +22,7 @@ const app: Application = express();
 const api = process.env.API_URL;
 
 //Middlewares
-app.use('*', cors());
+app.use(cors());
 app.use(morgan("dev"));
 app.use(cookieParser());
 app.use(express.json());
