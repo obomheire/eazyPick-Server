@@ -9,7 +9,14 @@ import { Categories } from "../models/categoriesModel";
 import mongoose from "mongoose";
 
 export const getProducts = async (req: Request, res: Response) => {
-  const productLists = await Products.find().select("name image -_id");
+  let filter = {};
+  if (req.query.categories) {
+    // cast the value to a string
+    filter = { category: (<string>req.query.categories).split(",") };
+  }
+
+  console.log("filter", filter);
+  const productLists = await Products.find(filter).populate("category");
 
   if (!productLists) {
     res.status(500).json({ success: false });
@@ -18,7 +25,9 @@ export const getProducts = async (req: Request, res: Response) => {
 };
 
 export const getProduct = async (req: Request, res: Response) => {
-  const product = await Products.findById(req.params.id).populate("category");
+  //To select a field to be sent/exclude the _id field:
+  // const product = await Products.findById(req.params.id).select("name image price -_id");
+    const product = await Products.findById(req.params.id).populate("category");
 
   if (!product) {
     res.status(500).json({ success: false });
@@ -159,7 +168,26 @@ export const getProductCount = async (req: Request, res: Response) => {
   if (!productCount) {
     res.status(500).json({ success: false });
   }
-  res.send({
-    productCount,
-  });
-};  
+  res.send({ productCount });
+};
+
+export const getProductFeatured = async (req: Request, res: Response) => {
+  const productFeatured = await Products.find({ isFeatured: true });
+
+  if (!productFeatured) {
+    res.status(500).json({ success: false });
+  }
+  res.send({ productFeatured });
+};
+
+export const getProductFeaturedCount = async (req: Request, res: Response) => {
+  const count = req.params.count ? req.params.count : 0;
+  const productFeaturedCount = await Products.find({ isFeatured: true }).limit(
+    +count
+  );
+
+  if (!productFeaturedCount) {
+    res.status(500).json({ success: false });
+  }
+  res.send({ productFeaturedCount });
+};
