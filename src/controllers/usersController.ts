@@ -80,7 +80,7 @@ export const userLogin = async (req: Request, res: Response) => {
     const token = jwt.sign({ userId: user.id }, <string>secret, { expiresIn: '1d' });
     res
       .status(200)
-      .send({ success: true, Message: "User successfully login!"});
+      .send({ success: true, user: user.email, token});
   } else {
     res.status(400).json({ success: false, Message: "Invalid credentials!" });
   }

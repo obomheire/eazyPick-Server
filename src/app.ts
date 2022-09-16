@@ -1,6 +1,5 @@
 import express, { Application, ErrorRequestHandler } from "express";
 import { Server } from "http";
-// import createHttpError from "http-errors";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import session from "express-session";
@@ -10,6 +9,8 @@ import morgan from "morgan";
 import { connect, mongoose } from "./connection/mongoConnect";
 import { connectTestDB } from "./connection/mongoMemoryServer";
 const MongoStore = require("connect-mongodb-session")(session);
+import errorHandler from "./utils/errorHandler";
+import authJwt from "./utils/jwt";
 
 //Routers
 import productsRoutes from "./routes/productsRoute";
@@ -23,7 +24,9 @@ const api = process.env.API_URL;
 
 //Middlewares
 app.use(cors());
+app.use(authJwt());
 app.use(morgan("dev"));
+app.use(errorHandler());
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
