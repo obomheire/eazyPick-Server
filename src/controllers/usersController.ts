@@ -14,3 +14,29 @@ export const getUsers = async (req: Request, res: Response) => {
   }
   res.send(usersList);
 };
+
+export const createUser = async (req: Request, res: Response) => {
+
+  const { name, email, passwordHash, phone, isAdmin, street, apartment, zip, city, country } = req.body;
+ 
+  let user = new Users({
+    name,
+    email,
+    passwordHash,
+    phone,
+    isAdmin,
+    street,
+    apartment,
+    zip,
+    city,
+    country
+  });
+
+  user = await user.save();
+
+  if (!user) {
+    return res.status(500).send({ Message: "The user cannot be created!" });
+  }
+
+  res.send(user);
+};
