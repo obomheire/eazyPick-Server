@@ -7,6 +7,8 @@ import {
   updateProduct,
   deleteProduct,
   getProductCount,
+  getProductFeatured,
+  getProductFeaturedCount,
 } from "../controllers/productsController";
 
 // Products Routes
@@ -16,5 +18,7 @@ router.post("/", createProduct);
 router.put("/:id", updateProduct);
 router.delete("/:id", deleteProduct);
 router.get("/get/count", getProductCount);
+router.get("/get/featured", getProductFeatured);
+router.get("/get/featured/:count", getProductFeaturedCount);
 
 export default router;
