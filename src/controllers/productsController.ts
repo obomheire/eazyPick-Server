@@ -15,22 +15,21 @@ export const getProducts = async (req: Request, res: Response) => {
     filter = { category: (<string>req.query.categories).split(",") };
   }
 
-  console.log("filter", filter);
   const productLists = await Products.find(filter).populate("category");
 
   if (!productLists) {
-    res.status(500).json({ success: false });
+    return res.status(500).json({ success: false });
   }
   res.send(productLists);
 };
 
 export const getProduct = async (req: Request, res: Response) => {
-  //To select a field to be sent/exclude the _id field:
-  // const product = await Products.findById(req.params.id).select("name image price -_id");
+  //To select a field to be sent
+  // const product = await Products.findById(req.params.id).select("name image price");
     const product = await Products.findById(req.params.id).populate("category");
 
   if (!product) {
-    res.status(500).json({ success: false });
+    return res.status(500).json({ success: false });
   }
   res.send(product);
 };
@@ -166,7 +165,7 @@ export const getProductCount = async (req: Request, res: Response) => {
   const productCount = await Products.countDocuments();
 
   if (!productCount) {
-    res.status(500).json({ success: false });
+    return res.status(500).json({ success: false });
   }
   res.send({ productCount });
 };
@@ -175,7 +174,7 @@ export const getProductFeatured = async (req: Request, res: Response) => {
   const productFeatured = await Products.find({ isFeatured: true });
 
   if (!productFeatured) {
-    res.status(500).json({ success: false });
+    return res.status(500).json({ success: false });
   }
   res.send({ productFeatured });
 };
@@ -187,7 +186,7 @@ export const getProductFeaturedCount = async (req: Request, res: Response) => {
   );
 
   if (!productFeaturedCount) {
-    res.status(500).json({ success: false });
+    return res.status(500).json({ success: false });
   }
   res.send({ productFeaturedCount });
 };
