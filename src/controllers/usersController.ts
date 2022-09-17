@@ -29,7 +29,32 @@ export const getUser = async (req: Request, res: Response) => {
   res.status(200).send(user);
 };
 
-export const createUser = async (req: Request, res: Response) => {
+export const userLogin = async (req: Request, res: Response) => {
+  const { email, password } = req.body;
+  const user = await Users.findOne({ email });
+
+  const secret = process.env.secret;
+
+  if (!user) {
+    return res.status(400).json({ success: false, Message: "User not found!" });
+  }
+
+  if (user && bcrypt.compareSync(password, user.passwordHash)) {
+    const token = jwt.sign(
+      {
+        userId: user.id,
+        isAdmin: user.isAdmin,
+      },
+      <string>secret,
+      { expiresIn: "1d" }
+    );
+    res.status(200).send({ success: true, user: user.email, token });
+  } else {
+    res.status(400).json({ success: false, Message: "Invalid credentials!" });
+  }
+};
+
+export const userRegister = async (req: Request, res: Response) => {
   const {
     name,
     email,
@@ -62,28 +87,38 @@ export const createUser = async (req: Request, res: Response) => {
     return res.status(400).send({ Message: "The user cannot be created!" });
   }
 
-  res.send(user);
+  res.status(200).send(user);
 };
 
-export const userLogin = async (req: Request, res: Response) => {
-  const { email, password } = req.body;
-  const user = await Users.findOne({ email, })
+export const getUserCount = async (req: Request, res: Response) => {
+  const userCount = await Users.countDocuments();
 
-  const secret = process.env.secret;
-
-  if (!user) {
-    return res.status(400).json({ success: false, Message: "User not found!" });
+  if (!userCount) {
+    return res.status(500).json({ success: false });
   }
-
-  if (user && bcrypt.compareSync(password, user.passwordHash)) {
-
-    const token = jwt.sign({ userId: user.id }, <string>secret, { expiresIn: '1d' });
-    res
-      .status(200)
-      .send({ success: true, user: user.email, token});
-  } else {
-    res.status(400).json({ success: false, Message: "Invalid credentials!" });
-  }
-
-  
+  res.send({ userCount });
 };
+
+export const deleteUser = async (req: Request, res: Response) => {
+  Users.findByIdAndRemove(req.params.id)
+    .then((user) => {
+      if (user) {
+        return res.status(200).json({
+          success: true,
+          message: "The user was deleted successfully",
+        });
+      } else {
+        return res.status(404).json({
+          success: false,
+          message: "The user was not deleted",
+        });
+      }
+    })
+    .catch((error) => {
+      return res.status(400).json({
+        success: false,
+        error,
+      });
+    });
+};
+
