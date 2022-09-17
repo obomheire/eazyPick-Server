@@ -1,0 +1,4 @@
+API_URL=/api/v1
+secret=your-secret-key
+NODE_ENV=development
+MONGODB_URI=your-mongodb-connection-string
