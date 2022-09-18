@@ -1,4 +1,5 @@
 API_URL=/api/v1
-secret=your-secret-key
+secret=anystring
 NODE_ENV=development
-MONGODB_URI=your-mongodb-connection-string
+MONGODB_URI=mongodb+srv://user_name:password@cluster0.ztwoi.mongodb.net/database_name?retryWrites=true&w=majority
+<!-- MONGODB_URI=mongodb://localhost:27017/database_name -->

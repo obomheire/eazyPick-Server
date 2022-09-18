@@ -1,6 +1,7 @@
-import mongoose, { Schema, model, Document, Types } from "mongoose";
+import { Schema, model } from "mongoose";
+import { Product } from "../utils/interface";
 
-const productsSchema = new mongoose.Schema({
+const productsSchema = new Schema<Product>({
   name: {
     type: String,
     required: true,
@@ -31,7 +32,7 @@ const productsSchema = new mongoose.Schema({
     default: 0,
   },
   category: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: Schema.Types.ObjectId,
     ref: "Categories",
     required: true,
   },
@@ -67,4 +68,4 @@ productsSchema.set("toJSON", {
   virtuals: true,
 });
 
-export const Products = model("Products", productsSchema);
+export const Products = model<Product>("Products", productsSchema);

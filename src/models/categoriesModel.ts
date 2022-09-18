@@ -1,6 +1,7 @@
-import mongoose, { Schema, model, Document, Types } from "mongoose";
+import { Schema, model } from "mongoose";
+import { Category } from "../utils/interface";
 
-const categoriesSchema = new mongoose.Schema({
+const categoriesSchema = new Schema<Category>({
   name: {
     type: String,
     required: true,
@@ -21,4 +22,4 @@ categoriesSchema.set("toJSON", {
   virtuals: true,
 });
 
-export const Categories = model("Categories", categoriesSchema);
+export const Categories = model<Category>("Categories", categoriesSchema);

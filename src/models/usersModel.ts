@@ -1,47 +1,47 @@
-import mongoose, { Schema, model, Document, Types } from "mongoose";
+import { Schema, model } from "mongoose";
+import { User } from "../utils/interface";
 
-const usersSchema = new mongoose.Schema({
-    name: {
-        type: String,
-        required: true,
-    },
-    email: {
-        type: String,
-        required: true,
-    },
-    passwordHash: {
-        type: String,
-        required: true,
-    },
-    phone: {
-        type: String,
-        required: true,
-    },
-    isAdmin: {
-        type: Boolean,
-        default: false,
-    },
-    street: {
-        type: String,
-        default: "",
-    },
-    apartment: {
-        type: String,
-        default: "",
-    },
-    zip: {
-        type: String,
-        default: "",
-    },
-    city: {
-        type: String,
-        default: "",
-    },
-    country: {
-        type: String,
-        default: "",
-    }
-  
+const usersSchema = new Schema<User>({
+  name: {
+    type: String,
+    required: true,
+  },
+  email: {
+    type: String,
+    required: true,
+  },
+  passwordHash: {
+    type: String,
+    required: true,
+  },
+  phone: {
+    type: String,
+    required: true,
+  },
+  isAdmin: {
+    type: Boolean,
+    default: false,
+  },
+  street: {
+    type: String,
+    default: "",
+  },
+  apartment: {
+    type: String,
+    default: "",
+  },
+  zip: {
+    type: String,
+    default: "",
+  },
+  city: {
+    type: String,
+    default: "",
+  },
+  country: {
+    type: String,
+    default: "",
+  },
 });
 
 usersSchema.virtual("id").get(function () {
@@ -49,7 +49,7 @@ usersSchema.virtual("id").get(function () {
 });
 
 usersSchema.set("toJSON", {
-  virtuals: true, 
+  virtuals: true,
 });
 
-export const Users = model("Users", usersSchema);
+export const Users = model<User>("Users", usersSchema);

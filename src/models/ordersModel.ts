@@ -1,9 +1,10 @@
-import mongoose, { Schema, model, Document, Types } from "mongoose";
+import { Schema, model } from "mongoose";
+import { Order } from "../utils/interface";
 
-const ordersSchema = new mongoose.Schema({
+const ordersSchema = new Schema<Order>({
   orderItems: [
     {
-      type: mongoose.Schema.Types.ObjectId,
+      type: Schema.Types.ObjectId,
       ref: "OrderItems",
       required: true,
     },
@@ -40,7 +41,7 @@ const ordersSchema = new mongoose.Schema({
     type: Number,
   },
   user: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: Schema.Types.ObjectId,
     ref: "Users",
   },
   dateOrdered: {
@@ -57,8 +58,7 @@ ordersSchema.set("toJSON", {
   virtuals: true,
 });
 
-export const Orders = model("Orders", ordersSchema);
-
+export const Orders = model<Order>("Orders", ordersSchema);
 
 /*
   Order Example:

@@ -1,15 +1,15 @@
-import mongoose, { Schema, model, Document, Types } from "mongoose";
+import { Schema, model } from "mongoose";
+import { OrderItem } from "../utils/interface";
 
-const orderItemsSchema = new mongoose.Schema({
-    quantity: {
-        type: Number,
-        required: true,
-    },
-    product: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Products",
-    }
-
+const orderItemsSchema = new Schema<OrderItem>({
+  quantity: {
+    type: Number,
+    required: true,
+  },
+  product: {
+    type: Schema.Types.ObjectId,
+    ref: "Products",
+  },
 });
 
 orderItemsSchema.virtual("id").get(function () {
@@ -21,4 +21,4 @@ orderItemsSchema.set("toJSON", {
 });
 
 
-export const OrderItems = model("OrderItems", orderItemsSchema);
+export const OrderItems = model<OrderItem>("OrderItems", orderItemsSchema);

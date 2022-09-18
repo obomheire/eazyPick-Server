@@ -89,7 +89,7 @@ export const createOrder = async (req: Request, res: Response) => {
     country,
     phone,
     status,
-    totalPrice: sumTotalPrice,
+    // totalPrice: sumTotalPrice,
     user,
   });
 
