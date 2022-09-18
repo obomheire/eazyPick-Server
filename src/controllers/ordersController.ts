@@ -6,7 +6,8 @@ import express, {
 } from "express";
 import { Orders } from "../models/ordersModel";
 import { OrderItems } from "../models/orderItemsModel";
-import { OrderItem } from "../utils/interface";
+import { OrderItem, Product } from "../utils/interface";
+import { Products } from "../models/productsModel";
 
 export const getOrders = async (req: Request, res: Response) => {
   const ordersList = await Orders.find()
@@ -28,7 +29,7 @@ export const getOrder = async (req: Request, res: Response) => {
     }); //Populate product which is an array of orderItems and populate category in product as well
 
   if (!order) {
-    res.status(500).json({ success: false });
+    return res.status(500).json({ success: false });
   }
   res.send(order);
 };
@@ -62,6 +63,23 @@ export const createOrder = async (req: Request, res: Response) => {
 
   // console.log(orderItemsIds);
 
+  const totalPrices = await Promise.all(
+    orderItemsIds.map(async (orderItemId: string) => {
+      const orderItem = await OrderItems.findById(orderItemId).populate(
+        "product",
+        "price"
+      );
+
+      // console.log(orderItem?.product?.price); //This is not working
+      
+      const product: any = await Products.findById(orderItem?.product?._id);
+      let totalPrice = product?.price * orderItem?.quantity!;
+      return totalPrice;
+    }
+  ));
+
+  let sumTotalPrice = totalPrices.reduce((a: number, b: number) => a + b, 0);
+
   let order = new Orders({
     orderItems: orderItemsIds,
     shippingAddress1,
@@ -71,7 +89,7 @@ export const createOrder = async (req: Request, res: Response) => {
     country,
     phone,
     status,
-    totalPrice,
+    totalPrice: sumTotalPrice,
     user,
   });
 
@@ -80,4 +98,46 @@ export const createOrder = async (req: Request, res: Response) => {
   if (!order) return res.status(400).send("The order cannot be created!");
 
   res.status(201).send(order);
+};
+
+export const updateOrderStatus = async (req: Request, res: Response) => {
+  const { status } = req.body;
+
+  const order = await Orders.findByIdAndUpdate(
+    req.params.id,
+    { status },
+    { new: true }
+  );
+
+  if (!order)
+    return res
+      .status(400)
+      .send({ Success: false, Message: "Order not found!" });
+
+  res.send(order);
+};
+
+export const deleteOrder = async (req: Request, res: Response) => {
+  Orders.findByIdAndRemove(req.params.id)
+    .then((order) => {
+      if (order) {
+        order.orderItems.map(async (orderItem) => {
+          await OrderItems.findByIdAndRemove(orderItem);
+        });
+        return res
+          .status(200)
+          .json({ success: true, message: "Order deleted successfully!" });
+      } else {
+        return res.status(404).json({
+          success: false,
+          message: "The order was not deleted",
+        });
+      }
+    })
+    .catch((error) => {
+      return res.status(400).json({
+        success: false,
+        error,
+      });
+    });
 };

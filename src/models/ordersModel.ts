@@ -71,8 +71,8 @@ export const Orders = model("Orders", ordersSchema);
       },
       {
     "quantity": 2,
-    "product": "5f9d1b0b0b5b9c0b8c8b8b4a"
-},
+    "product": "5f9d1b0b0b5b9c0b8c8b8b4a" 
+}
   ],
     "shippingAddress1": "1234 Main St",
     "shippingAddress2": "Apt 1",
@@ -82,7 +82,7 @@ export const Orders = model("Orders", ordersSchema);
     "phone": "123-456-7890",
     "status": "Pending",
     "totalPrice": 0,
-    "user": "5f9d1b0b0b5b9c0b8c8b8b8b",
+    "user": "5f9d1b0b0b5b9c0b8c8b8b8b"
  }
 
  */
