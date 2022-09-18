@@ -65,7 +65,7 @@ export const createOrder = async (req: Request, res: Response) => {
 
   const totalPrices = await Promise.all(
     orderItemsIds.map(async (orderItemId: string) => {
-      const orderItem = await OrderItems.findById(orderItemId).populate(
+      const orderItem = await OrderItems.findById(orderItemId).populate( 
         "product",
         "price"
       );
@@ -89,7 +89,7 @@ export const createOrder = async (req: Request, res: Response) => {
     country,
     phone,
     status,
-    // totalPrice: sumTotalPrice,
+    totalPrice: sumTotalPrice,
     user,
   });
 

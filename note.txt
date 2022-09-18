@@ -1,0 +1,4 @@
+1 - Update User route has not been created
+2 - When posting order, check if the product id exist
+3 - If posting order failed, orderItems should not be created
+4 - When posting product, check if the category id exist
