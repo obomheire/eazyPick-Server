@@ -141,3 +141,28 @@ export const deleteOrder = async (req: Request, res: Response) => {
       });
     });
 };
+
+export const getTotalSales = async (req: Request, res: Response) => {
+  const totalSales = await Orders.aggregate([
+    { $group: { _id: null, totalSales: { $sum: "$totalPrice" } } },
+  ]);
+
+  if (!totalSales) {
+    return res.status(400).send("The order sales cannot be generated");
+  }
+  
+  // console.log(totalSales);
+  res.send({Success: true, totalSales: totalSales.pop()?.totalSales });
+
+};
+
+export const getOrderCount = async (req: Request, res: Response) => {
+  const orderCount = await Orders.countDocuments();
+
+  if (!orderCount) {
+    return res.status(500).json({ success: false });
+  }
+  res.send({ orderCount });
+};
+
+
