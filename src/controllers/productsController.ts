@@ -26,7 +26,7 @@ export const getProducts = async (req: Request, res: Response) => {
 export const getProduct = async (req: Request, res: Response) => {
   //To select a field to be sent
   // const product = await Products.findById(req.params.id).select("name image price");
-    const product = await Products.findById(req.params.id).populate("category");
+  const product = await Products.findById(req.params.id).populate("category");
 
   if (!product) {
     return res.status(500).json({ success: false });
@@ -55,11 +55,14 @@ export const createProduct = async (req: Request, res: Response) => {
       return res.status(400).send({ Message: "Invalid category" });
     }
 
+    const fileNames = req.file?.filename;
+    const basePath = `${req.protocol}://${req.get("host")}/public/uploads/`;
+
     let product = new Products({
       name,
       description,
       richDescription,
-      image,
+      image: `${basePath}${fileNames}`, //"http://localhost:3000/public/uploads/image-1619780000000",
       brand,
       price,
       category,

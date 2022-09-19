@@ -10,11 +10,15 @@ import {
   getProductFeatured,
   getProductFeaturedCount,
 } from "../controllers/productsController";
+import {storage, fileFilter} from "../utils/imageUploads";
+import multer from "multer";
+
+const uploadOptions = multer({ storage, fileFilter });
 
 // Products Routes
 router.get("/", getProducts);
 router.get("/:id", getProduct);
-router.post("/", createProduct);
+router.post("/", uploadOptions.single("image"), createProduct);
 router.put("/:id", updateProduct);
 router.delete("/:id", deleteProduct);
 router.get("/get/count", getProductCount);
