@@ -55,6 +55,11 @@ export const createProduct = async (req: Request, res: Response) => {
       return res.status(400).send({ Message: "Invalid category" });
     }
 
+    const file = req.file;
+    if (!file) {
+      return res.status(400).send({ Message: "No image in the request" });
+    }
+
     const fileNames = req.file?.filename;
     const basePath = `${req.protocol}://${req.get("host")}/public/uploads/`;
 
