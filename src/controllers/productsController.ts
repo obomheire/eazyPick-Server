@@ -198,3 +198,33 @@ export const getProductFeaturedCount = async (req: Request, res: Response) => {
   }
   res.send({ productFeaturedCount });
 };
+
+export const productGalleryImageUpload = async (req: Request, res: Response) => {
+  if(!mongoose.isValidObjectId(req.params.id)){
+    return res.status(400).send({Message: 'Invalid product id'})
+  }
+
+  const files = JSON.parse(JSON.stringify(req.files))
+  let imagePaths: string[] = [];
+  const basePath = `${req.protocol}://${req.get("host")}/public/uploads/`;
+
+  if (files) { 
+    files.map((file: any) => {
+      imagePaths.push(`${basePath}${file.filename}`);
+    });
+  }
+  
+  const product = await Products.findByIdAndUpdate(
+    req.params.id,
+    {
+      images: imagePaths,
+    },
+    { new: true }
+  )
+
+  if (!product) { 
+    return res.status(500).send({Message: 'The produc could not be updated'})
+  }
+
+  res.send(product);
+}
