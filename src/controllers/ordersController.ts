@@ -165,4 +165,19 @@ export const getOrderCount = async (req: Request, res: Response) => {
   res.send({ orderCount });
 };
 
+export const getUserOrders = async (req: Request, res: Response) => { 
+
+  const userOrderList = await Orders.find({ user: req.params.userId })
+    .populate({
+      path: "orderItems",
+      populate: { path: "product", populate: "category" },
+    })
+    .sort({ dateOrdered: -1 });
+
+  if (!userOrderList) {
+    return res.status(500).json({ success: false, message: "Order not found!" });
+  }
+  
+  res.send(userOrderList);
+}
 

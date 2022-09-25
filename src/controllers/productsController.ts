@@ -55,11 +55,13 @@ export const createProduct = async (req: Request, res: Response) => {
       return res.status(400).send({ Message: "Invalid category" });
     }
 
+    //Get image from the request body
     const file = req.file;
     if (!file) {
       return res.status(400).send({ Message: "No image in the request" });
     }
 
+    //Get the image name from the request body & calculate path
     const fileNames = req.file?.filename;
     const basePath = `${req.protocol}://${req.get("host")}/public/uploads/`;
 
@@ -200,14 +202,18 @@ export const getProductFeaturedCount = async (req: Request, res: Response) => {
 };
 
 export const productGalleryImageUpload = async (req: Request, res: Response) => {
+
+  //Validate mongodb id
   if(!mongoose.isValidObjectId(req.params.id)){
     return res.status(400).send({Message: 'Invalid product id'})
   }
 
+  //Get image from the request body & calculate path
   const files = JSON.parse(JSON.stringify(req.files))
   let imagePaths: string[] = [];
   const basePath = `${req.protocol}://${req.get("host")}/public/uploads/`;
 
+  //Push the images to the images array
   if (files) { 
     files.map((file: any) => {
       imagePaths.push(`${basePath}${file.filename}`);
