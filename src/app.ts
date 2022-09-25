@@ -1,4 +1,9 @@
-import express, { Application, Request, Response, ErrorRequestHandler } from "express";
+import express, {
+  Application,
+  Request,
+  Response,
+  ErrorRequestHandler,
+} from "express";
 import { Server } from "http";
 import cors from "cors";
 import cookieParser from "cookie-parser";
@@ -11,7 +16,6 @@ import { connectTestDB } from "./connection/mongoMemoryServer";
 const MongoStore = require("connect-mongodb-session")(session);
 import errorHandler from "./utils/errorHandler";
 import authJwt from "./utils/jwt";
-import path from "path";
 
 //Routers
 import productsRoutes from "./routes/productsRoute";
@@ -31,14 +35,13 @@ app.use(errorHandler());
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use("/public/uploads", express.static(path.join(__dirname, "/public/uploads")));
-app.use( "/public/uploads", express.static(__dirname + "/public/uploads") );
+app.use("/public/uploads", express.static(__dirname + "/../public/uploads"));
 app.use(
   session({
     secret: "secretkey",
     resave: true,
     saveUninitialized: true,
-    store: new MongoStore({ mongooseConnection: mongoose.connection }), 
+    store: new MongoStore({ mongooseConnection: mongoose.connection }),
   })
 );
 
@@ -47,9 +50,9 @@ app.use(`${api}/products`, productsRoutes);
 app.use(`${api}/categories`, categoriesRoutes);
 app.use(`${api}/orders`, ordersRoutes);
 app.use(`${api}/users`, usersRoutes);
-app.get("/", (req: Request, res: Response) => { 
-  res.send({sucess: true, message: "Welcome to eazyPick API"});  
-})
+app.get("/", (req: Request, res: Response) => {
+  res.send({ sucess: true, message: "Welcome to eazyPick API" });
+});
 
 //MongoDB Connection
 if (process.env.NODE_ENV === "test") {
