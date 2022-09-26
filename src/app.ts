@@ -51,7 +51,7 @@ app.use(`${api}/categories`, categoriesRoutes);
 app.use(`${api}/orders`, ordersRoutes);
 app.use(`${api}/users`, usersRoutes);
 app.get("/", (req: Request, res: Response) => {
-  res.send({ sucess: true, message: "Welcome to eazyPick API" });
+  res.send({ status: "Running", message: "Hello from eazyPick API" });
 });
 
 //MongoDB Connection
@@ -64,7 +64,7 @@ if (process.env.NODE_ENV === "test") {
 }
 
 //App Port
-const PORT: number = Number(process.env.PORT) || 3000;
+const PORT = process.env.PORT || 3000;
 
 //App Server
 const server: Server = app.listen(PORT, () => {
