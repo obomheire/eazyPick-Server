@@ -41,9 +41,7 @@ app.use(
     secret: "secretkey",
     resave: true,
     saveUninitialized: true,
-    store: new MongoStore({
-      url: process.env.MONGODB_URI, // If this is not done this way, heroku will throw an error. See old setup bellow
-    }),
+    store: new MongoStore({ mongooseConnection: mongoose.connection }),
   })
 );
 
@@ -79,6 +77,8 @@ const server: Server = app.listen(PORT, () => {
 //     secret: "secretkey",
 //     resave: true,
 //     saveUninitialized: true,
-//     store: new MongoStore({ mongooseConnection: mongoose.connection }),
+//     store: new MongoStore({
+//       url: process.env.MONGODB_URI, // If this is not done this way, heroku will throw an error. See old setup bellow
+//     }),
 //   })
 // );

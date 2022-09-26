@@ -7,11 +7,10 @@ const authJwt = () => {
       secret,
       algorithms: ["HS256"],
       isRevoked,
-    }).unless({
+    }).unless({ 
       path: [
-        // { url: "/", methods: ["GET"] },
-        { url: /\/(.*)/, methods: ["GET", "OPTIONS"] },
-        // { url: /\/public\/uploads(.*)/, methods: ["GET", "OPTIONS"] },
+        { url: "/", methods: ["GET"] },
+        { url: /\/public\/uploads(.*)/, methods: ["GET", "OPTIONS"] },
         { url: /\/api\/v1\/products(.*)/, methods: ["GET", "OPTIONS"] },
         { url: /\/api\/v1\/categories(.*)/, methods: ["GET", "OPTIONS"] },
         `${api}/users/login`,
