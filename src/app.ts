@@ -36,14 +36,14 @@ app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use("/public/uploads", express.static(__dirname + "/../public/uploads"));
-app.use(
-  session({
-    secret: "secretkey",
-    resave: true,
-    saveUninitialized: true,
-    store: new MongoStore({ mongooseConnection: mongoose.connection }),
-  })
-);
+// app.use(
+//   session({
+//     secret: "secretkey",
+//     resave: true,
+//     saveUninitialized: true,
+//     store: new MongoStore({ mongooseConnection: mongoose.connection }),
+//   })
+// );
 
 //Routes
 app.use(`${api}/products`, productsRoutes);
